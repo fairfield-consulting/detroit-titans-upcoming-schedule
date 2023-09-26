@@ -74,7 +74,12 @@ class GameParser {
 
   private get time() {
     const node = select('.sidearm-schedule-game-time span', this.element)
-    return node?.children?.find(isTextElement)?.value?.trim()
+    return node?.children
+      ?.find(isTextElement)
+      ?.value?.replace(/(am|pm)/i, (value) => value.toLowerCase())
+      ?.replace(':00', '')
+      ?.replaceAll(/\s+/g, '')
+      ?.trim()
   }
 
   private get opponentLogoUrl() {
@@ -85,7 +90,10 @@ class GameParser {
 
     const logoUrl = node?.properties?.dataSrc
     if (logoUrl) {
-      return `https://detroittitans.com${logoUrl}`
+      const url = new URL(`https://detroittitans.com${logoUrl}`)
+      url.searchParams.delete('width')
+      url.searchParams.delete('height')
+      return url.toString()
     }
   }
 

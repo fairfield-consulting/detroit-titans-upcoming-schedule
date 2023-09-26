@@ -4,8 +4,8 @@ import { z } from 'zod'
 
 import { prisma } from '@/db'
 import { parseSchedule } from '@/schedule-parser'
+import { SportNameSchema } from '@/sport'
 import { fetchSportScheduleHtml } from '@/titans-api'
-import { SportNameSchema } from '@/types'
 
 const ParamsSchema = z.object({
   sportName: SportNameSchema,
@@ -33,6 +33,7 @@ export async function GET(_request: NextRequest, context: { params: unknown }) {
           date: DateTime.fromISO(game.date).toUTC().toJSDate(),
           time: game.time,
           opponentName: game.opponentName,
+          opponentLogoUrl: game.opponentLogoUrl,
         },
       })
     ),

@@ -8,3 +8,10 @@ export const SportNameSchema = z.enum([
 ])
 
 export type SportName = z.infer<typeof SportNameSchema>
+
+export const Sport = {
+  MensSoccer: 9,
+  WomensSoccer: 10,
+  MensBasketball: 1,
+  WomensBasketball: 2,
+} as const

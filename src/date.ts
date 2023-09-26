@@ -11,7 +11,7 @@ export function parseDateForYear(
 
   const month = match[1]
   const day = match[2]
-  const resolvedYear = Info.months('short').indexOf(month) < 8 ? year + 1 : year
+  const resolvedYear = Info.months('short').indexOf(month) < 7 ? year + 1 : year
 
   return DateTime.fromFormat(
     `${resolvedYear}-${month}-${day}`,
