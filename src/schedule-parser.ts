@@ -11,9 +11,10 @@ function isTextElement(element: ElementContent): element is Text {
 
 const GameSchema = z.object({
   gameId: z.string().transform(Number),
-  opponentId: z.string().transform(Number),
   sportId: z.string().transform(Number),
+  opponentId: z.string().transform(Number),
   opponentName: z.string(),
+  opponentLogoUrl: z.string().optional(),
   date: z.string(),
   time: z.string().optional(),
 })
@@ -76,12 +77,25 @@ class GameParser {
     return node?.children?.find(isTextElement)?.value?.trim()
   }
 
+  private get opponentLogoUrl() {
+    const node = select(
+      '.sidearm-schedule-game-opponent-logo img',
+      this.element
+    )
+
+    const logoUrl = node?.properties?.dataSrc
+    if (logoUrl) {
+      return `https://detroittitans.com${logoUrl}`
+    }
+  }
+
   toJSON(): z.infer<typeof GameSchema> {
     const gameProperties = {
       gameId: this.gameId,
-      opponentId: this.opponentId,
       sportId: this.sportId,
+      opponentId: this.opponentId,
       opponentName: this.opponentName,
+      opponentLogoUrl: this.opponentLogoUrl,
       date: this.date,
       time: this.time,
     }
