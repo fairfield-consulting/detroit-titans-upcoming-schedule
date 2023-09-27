@@ -1,9 +1,47 @@
-import { Game } from '@prisma/client'
+import { type MetaFunction } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 import { DateTime } from 'luxon'
-import Image, { ImageProps } from 'next/image'
 
-import { prisma } from '@/db'
-import { Sport } from '@/sport'
+import { prisma } from '~/db'
+import { Sport } from '~/sport'
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: 'New Remix App' },
+    { name: 'description', content: 'Welcome to Remix!' },
+  ]
+}
+
+export async function loader() {
+  const games = await prisma.game.findMany({
+    where: {
+      date: {
+        gte: DateTime.now().startOf('day').toJSDate(),
+      },
+    },
+    orderBy: {
+      date: 'asc',
+    },
+    select: {
+      id: true,
+      sportId: true,
+      gameId: true,
+      opponentName: true,
+      opponentLogoUrl: true,
+      date: true,
+      time: true,
+    },
+  })
+
+  return {
+    games: games.map((game) => ({
+      ...game,
+      date: DateTime.fromJSDate(game.date).toISODate(),
+    })),
+  }
+}
+
+type SerializedGame = Awaited<ReturnType<typeof loader>>['games'][number]
 
 function displaySportName(sportId: number) {
   switch (sportId) {
@@ -33,27 +71,15 @@ function sportEmoji(sportId: number) {
   }
 }
 
-export default async function Home() {
-  const games = await prisma.game.findMany({
-    where: {
-      date: {
-        gte: DateTime.now().startOf('day').toJSDate(),
-      },
-    },
-    orderBy: {
-      date: 'asc',
-    },
-  })
+export default function Home() {
+  const { games } = useLoaderData<typeof loader>()
 
   return (
     <main className='container mx-auto flex min-h-screen flex-col space-y-8 px-4 py-24'>
       <h2 className='text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>
         Upcoming Titans Home Games
       </h2>
-      <ul
-        role='list'
-        className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
-      >
+      <ul className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
         {games.map((game) => (
           <GameCard key={game.id} game={game} />
         ))}
@@ -62,19 +88,8 @@ export default async function Home() {
   )
 }
 
-function OpponentLogo({ src, alt }: Pick<ImageProps, 'src' | 'alt'>) {
-  return (
-    <Image
-      className='mx-auto h-32 w-32 flex-shrink-0'
-      height={128}
-      width={128}
-      src={src}
-      alt={alt}
-    />
-  )
-}
-
-function GameCard({ game }: { game: Game }) {
+function GameCard({ game }: { game: SerializedGame }) {
+  const gameDate = DateTime.fromISO(game.date!)
   return (
     <li className='relative col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow'>
       <span className='top-0p-4 absolute p-2 text-2xl'>
@@ -82,7 +97,8 @@ function GameCard({ game }: { game: Game }) {
       </span>
       <div className='flex flex-1 flex-col p-8'>
         {game.opponentLogoUrl ? (
-          <OpponentLogo
+          <img
+            className='mx-auto h-32 w-32 flex-shrink-0'
             src={game.opponentLogoUrl}
             alt={`${game.opponentName} logo`}
           />
@@ -97,12 +113,12 @@ function GameCard({ game }: { game: Game }) {
           </dd>
           <dt className='sr-only'>Date and Time</dt>
           <dd className='text-sm text-gray-500'>
-            {game.date.toLocaleDateString('en-US', {
+            {gameDate.toLocaleString({
               weekday: 'short',
               month: 'long',
               day: 'numeric',
               year:
-                game.date.getFullYear() > new Date().getFullYear()
+                gameDate.year > new Date().getFullYear()
                   ? 'numeric'
                   : undefined,
             })}{' '}

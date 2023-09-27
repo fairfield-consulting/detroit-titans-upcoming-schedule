@@ -5,7 +5,7 @@ import { parseDateForYear } from './date'
 
 describe('parseDateForYear', () => {
   // @ts-expect-error bun's test.each types are incorrect
-  test.each(Info.months('short').slice(0, 8))(
+  test.each(Info.months('short').slice(0, 7))(
     'parses date with month %s in next year for winter sports than span 2 years',
     (month: string) => {
       expect(parseDateForYear(`${month} 15`, 2023)).toEqual(
@@ -15,7 +15,7 @@ describe('parseDateForYear', () => {
   )
 
   // @ts-expect-error bun's test.each types are incorrect
-  test.each(Info.months('short').slice(8))(
+  test.each(Info.months('short').slice(7))(
     'parses date with month %s in current year',
     (month: string) => {
       expect(parseDateForYear(`${month} 15`, 2023)).toEqual(

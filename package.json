@@ -1,41 +1,47 @@
 {
   "name": "next-titans",
-  "version": "0.1.0",
   "private": true,
+  "sideEffects": false,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "test": "bun test"
+    "build": "remix build",
+    "dev": "remix dev --manual",
+    "start": "remix-serve ./build/index.js",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@prisma/client": "5.3.1",
+    "@remix-run/css-bundle": "^2.0.1",
+    "@remix-run/node": "^2.0.1",
+    "@remix-run/react": "^2.0.1",
+    "@remix-run/serve": "^2.0.1",
     "@types/node": "20.6.4",
-    "@types/react": "18.2.22",
-    "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.16",
-    "eslint": "8.50.0",
-    "eslint-config-next": "13.5.2",
     "hast-util-from-html": "^2.0.1",
     "hast-util-select": "^6.0.1",
+    "isbot": "^3.6.8",
     "luxon": "^3.4.3",
-    "next": "13.5.3",
-    "postcss": "8.4.30",
-    "prisma": "^5.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "tailwindcss": "3.3.3",
-    "typescript": "5.2.2",
+    "remix-utils": "^6.6.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@remix-run/dev": "^2.0.1",
+    "@remix-run/eslint-config": "^2.0.1",
     "@types/hast": "^3.0.1",
     "@types/luxon": "^3.3.2",
+    "@types/react-dom": "^18.2.7",
+    "@types/react": "^18.2.20",
     "bun-types": "^1.0.3",
     "eslint-plugin-no-relative-import-paths": "^1.5.2",
     "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint": "^8.50.0",
+    "postcss": "8.4.30",
+    "prettier-plugin-tailwindcss": "^0.5.4",
     "prettier": "^3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.4"
+    "prisma": "^5.3.1",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.2.2"
   }
 }

@@ -3,7 +3,7 @@ import { fromHtml } from 'hast-util-from-html'
 import { select, selectAll } from 'hast-util-select'
 import { z } from 'zod'
 
-import { parseDateForYear } from '@/date'
+import { parseDateForYear } from '~/date'
 
 function isTextElement(element: ElementContent): element is Text {
   return element.type === 'text'

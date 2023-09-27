@@ -1,20 +1,28 @@
+import type { ActionFunctionArgs } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { DateTime } from 'luxon'
-import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
-import { prisma } from '@/db'
-import { parseSchedule } from '@/schedule-parser'
-import { SportNameSchema } from '@/sport'
-import { fetchSportScheduleHtml } from '@/titans-api'
+import { prisma } from '~/db'
+import { env } from '~/env'
+import { parseSchedule } from '~/schedule-parser'
+import { SportNameSchema } from '~/sport'
+import { fetchSportScheduleHtml } from '~/titans-api'
 
 const ParamsSchema = z.object({
   sportName: SportNameSchema,
 })
 
-export async function GET(_request: NextRequest, context: { params: unknown }) {
-  // TODO validate request headers for cron auth
+export async function action({ request, params }: ActionFunctionArgs) {
+  if (request.method !== 'POST') {
+    throw new Response(null, { status: 405 })
+  }
 
-  const { sportName } = ParamsSchema.parse(context.params)
+  if (request.headers.get('x-cron-auth') !== env.CRON_SECRET) {
+    throw new Response(null, { status: 401 })
+  }
+
+  const { sportName } = ParamsSchema.parse(params)
 
   const html = await fetchSportScheduleHtml(sportName)
   const parser = parseSchedule(html)
@@ -40,5 +48,5 @@ export async function GET(_request: NextRequest, context: { params: unknown }) {
     prisma.gameUpdate.create({ data: {} }),
   ])
 
-  return NextResponse.json({ homeGames })
+  return json({ homeGames })
 }
