@@ -7,8 +7,11 @@ import { Sport } from '~/sport'
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'New Remix App' },
-    { name: 'description', content: 'Welcome to Remix!' },
+    { title: 'Detroit Titans Upcoming Home Games' },
+    {
+      name: 'description',
+      content: 'Upcoming home games for the Detroit Titans',
+    },
   ]
 }
 
@@ -92,9 +95,7 @@ function GameCard({ game }: { game: SerializedGame }) {
   const gameDate = DateTime.fromISO(game.date!)
   return (
     <li className='relative col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow'>
-      <span className='top-0p-4 absolute p-2 text-2xl'>
-        {sportEmoji(game.sportId)}
-      </span>
+      <span className='absolute p-2 text-2xl'>{sportEmoji(game.sportId)}</span>
       <div className='flex flex-1 flex-col p-8'>
         {game.opponentLogoUrl ? (
           <img

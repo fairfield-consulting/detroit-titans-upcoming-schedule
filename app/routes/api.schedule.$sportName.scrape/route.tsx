@@ -1,13 +1,14 @@
 import type { ActionFunctionArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
 import { DateTime } from 'luxon'
 import { z } from 'zod'
 
 import { prisma } from '~/db'
 import { env } from '~/env'
-import { parseSchedule } from '~/schedule-parser'
+import { methodNotAllowed, noContent, unauthorized } from '~/remix-utils'
 import { SportNameSchema } from '~/sport'
-import { fetchSportScheduleHtml } from '~/titans-api'
+
+import { parseHomeGames } from './schedule-parser'
+import { fetchSportScheduleHtml } from './titans-api'
 
 const ParamsSchema = z.object({
   sportName: SportNameSchema,
@@ -15,19 +16,17 @@ const ParamsSchema = z.object({
 
 export async function action({ request, params }: ActionFunctionArgs) {
   if (request.method !== 'POST') {
-    throw new Response(null, { status: 405 })
+    throw methodNotAllowed()
   }
 
   if (request.headers.get('x-cron-auth') !== env.CRON_SECRET) {
-    throw new Response(null, { status: 401 })
+    throw unauthorized()
   }
 
   const { sportName } = ParamsSchema.parse(params)
 
   const html = await fetchSportScheduleHtml(sportName)
-  const parser = parseSchedule(html)
-
-  const homeGames = parser.homeGames.map((game) => game.toJSON())
+  const homeGames = await parseHomeGames(html)
 
   await prisma.$transaction([
     ...homeGames.map((game) =>
@@ -48,5 +47,5 @@ export async function action({ request, params }: ActionFunctionArgs) {
     prisma.gameUpdate.create({ data: {} }),
   ])
 
-  return json({ homeGames })
+  return noContent()
 }
