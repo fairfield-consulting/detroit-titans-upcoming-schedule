@@ -3,8 +3,9 @@ import { fromHtml } from 'hast-util-from-html'
 import { select, selectAll } from 'hast-util-select'
 import { z } from 'zod'
 
-import { parseDateForYear } from '~/date'
 import { SportIdSchema } from '~/sport'
+
+import { parseDateForYear } from './utils'
 
 const isTextElement = (element: ElementContent): element is Text =>
   element.type === 'text'
