@@ -1,38 +1,60 @@
-# Welcome to Remix!
+# Detroit Titans Upcoming Home Games
 
-- [Remix Docs](https://remix.run/docs)
+> Built with [Remix](https://remix.run) and [Inngest](https://inngest.com)
 
 ## Development
 
-From your terminal:
+First, ensure [bun](https://bun.sh/) is installed.
+
+Then, install the project dependencies:
 
 ```sh
-npm run dev
+bun install
 ```
 
-This starts your app in development mode, rebuilding assets on file changes.
+### Environment Variables
+
+This app uses the following environment variables:
+
+- `INNGEST_EVENT_KEY` - The Inngest event key, found at https://app.inngest.com/env/production/manage/keys
+- `INNGEST_SIGNING_KEY` - the Inngest signing key, found at https://app.inngest.com/env/production/manage/signing-key
+- `DATABASE_URL` - The PostgreSQL database URL (for example, `postgres://user:password@localhost:5432/titans_development`)
+
+### Running the App
+
+```sh
+bun dev
+```
+
+This starts the app in development mode, rebuilding assets on file changes. This also starts an Inngest dev server for inspecting or triggering events.
+
+- The app is running at [localhost:3000](http://localhost:3000).
+- The Inngest dev server is running at [localhost:8288](http://localhost:8288).
+
+### Running Checks
+
+Run the unit test suite:
+
+```sh
+bun test
+```
+
+Run the linter:
+
+```sh
+bun lint
+```
 
 ## Deployment
 
-First, build your app for production:
+First, build the app for production:
 
 ```sh
-npm run build
+bun run build
 ```
 
-Then run the app in production mode:
+Then, run the app in production mode:
 
 ```sh
-npm start
+bun start
 ```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`

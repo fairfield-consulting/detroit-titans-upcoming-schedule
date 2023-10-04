@@ -3,6 +3,7 @@ import { useLoaderData } from '@remix-run/react'
 import { DateTime } from 'luxon'
 
 import { prisma } from '~/db'
+import { logger } from '~/logger.server'
 import { Sport } from '~/sport'
 
 export const meta: MetaFunction = () => {
@@ -16,6 +17,7 @@ export const meta: MetaFunction = () => {
 }
 
 export async function loader() {
+  logger.profile('Load upcoming games')
   const games = await prisma.game.findMany({
     where: {
       date: {
@@ -35,6 +37,7 @@ export async function loader() {
       time: true,
     },
   })
+  logger.profile('Load upcoming games')
 
   return {
     games: games.map((game) => ({

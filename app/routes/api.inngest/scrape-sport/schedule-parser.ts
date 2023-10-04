@@ -4,14 +4,14 @@ import { select, selectAll } from 'hast-util-select'
 import { z } from 'zod'
 
 import { parseDateForYear } from '~/date'
+import { SportIdSchema } from '~/sport'
 
-function isTextElement(element: ElementContent): element is Text {
-  return element.type === 'text'
-}
+const isTextElement = (element: ElementContent): element is Text =>
+  element.type === 'text'
 
 const GameSchema = z.object({
   gameId: z.string().transform(Number),
-  sportId: z.string().transform(Number),
+  sportId: z.string().pipe(SportIdSchema),
   opponentId: z.string().transform(Number),
   opponentName: z.string(),
   opponentLogoUrl: z.string().optional(),
@@ -23,7 +23,7 @@ export function parseHomeGames(html: string) {
   const root = fromHtml(html)
 
   const scrapedGames = selectAll('.sidearm-schedule-home-game', root).map(
-    parseGameFromElement
+    (element) => parseGameFromElement(element)
   )
 
   return z.array(GameSchema).parseAsync(scrapedGames)
