@@ -11,9 +11,9 @@ const isTextElement = (element: ElementContent): element is Text =>
   element.type === 'text'
 
 const GameSchema = z.object({
-  gameId: z.string().transform(Number),
-  sportId: z.string().pipe(SportIdSchema),
-  opponentId: z.string().transform(Number),
+  gameId: z.coerce.number(),
+  sportId: z.coerce.number().pipe(SportIdSchema),
+  opponentId: z.coerce.number(),
   opponentName: z.string(),
   opponentLogoUrl: z.string().optional(),
   date: z.string(),
