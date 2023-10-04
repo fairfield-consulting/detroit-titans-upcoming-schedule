@@ -4,7 +4,7 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "prisma migrate deploy && remix build",
+    "build": "prisma migrate deploy && prisma generate && remix build",
     "dev": "concurrently --kill-others \"npm:*:dev\"",
     "remix:dev": "remix dev --manual",
     "inngest:dev": "npx inngest-cli@latest dev --no-discovery -u http://localhost:3000/api/inngest",
