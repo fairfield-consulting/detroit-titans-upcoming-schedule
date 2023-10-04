@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 
-import { prisma } from '~/db'
+import { prisma } from '~/db.server'
 import { logger } from '~/logger.server'
 import { inngest } from '~/routes/api.inngest/client'
 import { sportIdToSlug } from '~/sport'

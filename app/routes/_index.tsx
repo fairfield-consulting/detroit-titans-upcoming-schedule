@@ -2,7 +2,7 @@ import { type MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { DateTime } from 'luxon'
 
-import { prisma } from '~/db'
+import { prisma } from '~/db.server'
 import { logger } from '~/logger.server'
 import { Sport } from '~/sport'
 
