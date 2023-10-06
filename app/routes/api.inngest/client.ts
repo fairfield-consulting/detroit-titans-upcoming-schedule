@@ -1,15 +1,16 @@
 import { EventSchemas, Inngest } from 'inngest'
-import { z } from 'zod'
 
-import { SportIdSchema } from '~/sport'
+import type { SportId } from '~/sport'
+
+type Events = {
+  'schedule/scrape-sport': {
+    data: {
+      sportId: SportId
+    }
+  }
+}
 
 export const inngest = new Inngest({
-  name: 'Detroit Titans',
-  schemas: new EventSchemas().fromZod({
-    'schedule/scrape-sport': {
-      data: z.object({
-        sportId: SportIdSchema,
-      }),
-    },
-  }),
+  id: 'detroit-titans',
+  schemas: new EventSchemas().fromRecord<Events>(),
 })

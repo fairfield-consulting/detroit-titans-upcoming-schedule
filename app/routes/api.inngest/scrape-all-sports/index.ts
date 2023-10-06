@@ -3,7 +3,7 @@ import { inngest } from '~/routes/api.inngest/client'
 import { Sport } from '~/sport'
 
 export default inngest.createFunction(
-  { name: 'Scrape Detroit Titans home schedules' },
+  { id: 'scrape-all-sports', name: 'Scrape Detroit Titans home schedules' },
   { cron: 'TZ=America/New_York 0 8 * * *' },
   async ({ step }) => {
     logger.info('Scraping all sports')
@@ -13,6 +13,6 @@ export default inngest.createFunction(
       data: { sportId },
     }))
 
-    await step.sendEvent(events)
+    await step.sendEvent('schedule/scrape-sport', events)
   }
 )

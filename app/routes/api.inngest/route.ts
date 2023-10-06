@@ -4,6 +4,9 @@ import { inngest } from './client'
 import scrapeAllSports from './scrape-all-sports'
 import scrapeSport from './scrape-sport'
 
-const handler = serve(inngest, [scrapeSport, scrapeAllSports])
+const handler = serve({
+  client: inngest,
+  functions: [scrapeAllSports, scrapeSport],
+})
 
 export { handler as action, handler as loader }
