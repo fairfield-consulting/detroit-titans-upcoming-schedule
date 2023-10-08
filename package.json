@@ -6,7 +6,7 @@
     "dev": "concurrently --kill-others \"npm:*:dev\"",
     "next:dev": "next dev",
     "inngest:dev": "npx inngest-cli@latest dev --no-discovery -u http://localhost:3000/api/inngest",
-    "build": "next build",
+    "build": "bun run src/db/migrate.ts && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -34,6 +34,7 @@
     "autoprefixer": "^10",
     "concurrently": "^8.2.1",
     "drizzle-kit": "^0.19.13",
+    "encoding": "^0.1.13",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",
     "eslint-plugin-no-relative-import-paths": "^1.5.2",
