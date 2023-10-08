@@ -2,7 +2,6 @@
   "extends": "next/core-web-vitals",
   "plugins": ["no-relative-import-paths", "simple-import-sort"],
   "rules": {
-    "func-style": ["error", "expression", { "allowArrowFunctions": true }],
     "prefer-const": "error",
     "no-relative-import-paths/no-relative-import-paths": [
       "warn",
