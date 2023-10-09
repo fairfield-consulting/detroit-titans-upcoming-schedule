@@ -1,18 +1,9 @@
-import { asc, gte } from 'drizzle-orm'
-import { DateTime } from 'luxon'
-
-import { db } from '@/db/client'
-import { profile } from '@/logger'
+import { fetchUpcomingGames } from '@/api'
 
 import { GameCard } from './components/game-card'
 
 export default async function Home() {
-  const games = await profile('find upcoming games', () =>
-    db.query.games.findMany({
-      where: (games) => gte(games.date, DateTime.now().startOf('day').toISO()!),
-      orderBy: (games) => [asc(games.date)],
-    })
-  )
+  const { data: games } = await fetchUpcomingGames()
 
   return (
     <main className='container mx-auto flex min-h-screen flex-col space-y-8 px-4 py-24'>

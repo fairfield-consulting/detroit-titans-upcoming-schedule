@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { revalidatePath } from 'next/cache'
+import { revalidateTag } from 'next/cache'
 
 import { db } from '@/db/client'
 import { games, gameUpdates } from '@/db/schema'
@@ -48,7 +48,7 @@ export default inngest.createFunction(
             await tx.insert(gameUpdates).values({ sportId })
           })
         )
-        revalidatePath('/', 'page')
+        revalidateTag('games')
       }
     )
   }

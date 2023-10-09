@@ -7,6 +7,8 @@ import {
   timestamp,
   uniqueIndex,
 } from 'drizzle-orm/pg-core'
+import { createSelectSchema } from 'drizzle-zod'
+import { z } from 'zod'
 
 export const games = pgTable(
   'games',
@@ -26,6 +28,12 @@ export const games = pgTable(
     gameIdIdx: uniqueIndex('game_id_idx').on(table.gameId),
   })
 )
+
+export const SelectGamesSchema = createSelectSchema(games, {
+  date: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+})
 
 export const gameUpdates = pgTable('game_updates', {
   id: serial('id').primaryKey(),

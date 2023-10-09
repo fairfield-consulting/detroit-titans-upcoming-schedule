@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "drizzle-orm": "^0.28.6",
+    "drizzle-zod": "^0.5.1",
     "hast-util-from-html": "^2.0.1",
     "hast-util-select": "^6.0.1",
     "inngest": "^3.0.2",
