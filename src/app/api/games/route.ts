@@ -17,5 +17,15 @@ export async function GET(req: NextRequest) {
     })
   )
 
-  return NextResponse.json({ data: games })
+  return NextResponse.json(
+    { data: games },
+    {
+      status: 200,
+      headers: {
+        'Cache-Control': 'public, s-maxage=86400',
+        'CDN-Cache-Control': 'public, s-maxage=86400',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=86400',
+      },
+    }
+  )
 }
