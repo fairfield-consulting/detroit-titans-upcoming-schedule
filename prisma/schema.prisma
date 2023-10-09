@@ -12,20 +12,24 @@ datasource db {
 
 model Game {
   id              Int      @id @default(autoincrement())
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  gameId          Int      @unique
-  sportId         Int
-  opponentId      Int
-  opponentName    String
-  opponentLogoUrl String?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  gameId          Int      @unique @map("game_id")
+  sportId         Int      @map("sport_id")
+  opponentId      Int      @map("opponent_id")
+  opponentName    String   @map("opponent_name")
+  opponentLogoUrl String?  @map("opponent_logo_url")
   date            DateTime
   time            String?
+
+  @@map("games")
 }
 
 model GameUpdate {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  sportId   Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  sportId   Int      @map("sport_id")
+
+  @@map("game_updates")
 }

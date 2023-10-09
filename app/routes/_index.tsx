@@ -16,6 +16,12 @@ export const meta: MetaFunction = () => {
   ]
 }
 
+export function headers() {
+  return {
+    'Cache-Control': 's-maxage=86400, stale-while-revalidate=3600',
+  }
+}
+
 export async function loader() {
   logger.profile('Load upcoming games')
   const games = await prisma.game.findMany({
