@@ -48,7 +48,7 @@ export default inngest.createFunction(
             await tx.insert(gameUpdates).values({ sportId })
           })
         )
-        revalidatePath('/')
+        revalidatePath('/', 'page')
       }
     )
   }
