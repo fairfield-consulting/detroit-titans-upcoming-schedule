@@ -1,8 +1,9 @@
 import { sql } from 'drizzle-orm'
+import { revalidatePath } from 'next/cache'
 
 import { db } from '@/db/client'
-import * as schema from '@/db/schema'
-import { logger } from '@/logger'
+import { games, gameUpdates } from '@/db/schema'
+import { logger, profile } from '@/logger'
 import { sportIdToSlug } from '@/sport'
 
 import { inngest } from '../client'
@@ -30,23 +31,24 @@ export default inngest.createFunction(
     await step.run(
       { id: 'upsert-home-games', name: 'Upserting games' },
       async () => {
-        logger.profile('Upserting home games')
-        await db.transaction(async (tx) => {
-          await tx
-            .insert(schema.games)
-            .values(homeGames)
-            .onConflictDoUpdate({
-              target: schema.games.gameId,
-              set: {
-                date: sql`EXCLUDED.date`,
-                time: sql`EXCLUDED.time`,
-                opponentName: sql`EXCLUDED.opponent_name`,
-                opponentLogoUrl: sql`EXCLUDED.opponent_logo_url`,
-              },
-            })
-          await tx.insert(schema.gameUpdates).values({ sportId })
-        })
-        logger.profile('Upserting home games')
+        await profile('upsert home games', () =>
+          db.transaction(async (tx) => {
+            await tx
+              .insert(games)
+              .values(homeGames)
+              .onConflictDoUpdate({
+                target: games.gameId,
+                set: {
+                  date: sql`EXCLUDED.date`,
+                  time: sql`EXCLUDED.time`,
+                  opponentName: sql`EXCLUDED.opponent_name`,
+                  opponentLogoUrl: sql`EXCLUDED.opponent_logo_url`,
+                },
+              })
+            await tx.insert(gameUpdates).values({ sportId })
+          })
+        )
+        revalidatePath('/')
       }
     )
   }

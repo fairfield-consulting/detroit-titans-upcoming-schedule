@@ -1,16 +1,18 @@
-import { gte } from 'drizzle-orm'
+import { asc, gte } from 'drizzle-orm'
 import { DateTime } from 'luxon'
 
 import { db } from '@/db/client'
-import * as schema from '@/db/schema'
+import { profile } from '@/logger'
 
 import { GameCard } from './components/game-card'
 
 export default async function Home() {
-  const games = await db.query.games.findMany({
-    where: gte(schema.games.date, DateTime.now().startOf('day').toISO()!),
-    orderBy: (games, { asc }) => [asc(games.date)],
-  })
+  const games = await profile('find upcoming games', () =>
+    db.query.games.findMany({
+      where: (games) => gte(games.date, DateTime.now().startOf('day').toISO()!),
+      orderBy: (games) => [asc(games.date)],
+    })
+  )
 
   return (
     <main className='container mx-auto flex min-h-screen flex-col space-y-8 px-4 py-24'>

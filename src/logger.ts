@@ -12,3 +12,10 @@ export const logger = winston.createLogger({
   ),
   transports: [new winston.transports.Console()],
 })
+
+export async function profile<T>(label: string, fn: () => Promise<T>) {
+  logger.profile(label)
+  const result = await fn()
+  logger.profile(label)
+  return result
+}
