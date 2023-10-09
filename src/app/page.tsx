@@ -2,6 +2,8 @@ import { fetchUpcomingGames } from '@/api'
 
 import { GameCard } from './components/game-card'
 
+export const runtime = 'edge'
+
 export default async function Home() {
   const { data: games } = await fetchUpcomingGames()
 
