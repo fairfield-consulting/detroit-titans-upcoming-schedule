@@ -1,5 +1,5 @@
-import { type MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { type MetaFunction } from '@vercel/remix'
 import { DateTime } from 'luxon'
 
 import { prisma } from '~/db.server'
