@@ -2,7 +2,7 @@ import { fetchUpcomingGames } from '@/api'
 
 import { GameCard } from './components/game-card'
 
-export const runtime = 'edge'
+export const revalidate = 60 * 60 * 6 // 6 hours
 
 export default async function Home() {
   const { data: games } = await fetchUpcomingGames()
