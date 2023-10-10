@@ -20,6 +20,12 @@ export const meta: MetaFunction = () => {
   ]
 }
 
+export function headers() {
+  return {
+    'Cache-Control': 'public, max-age=0, s-maxage=86400',
+  }
+}
+
 export async function loader() {
   const games = await db.query.games.findMany({
     where: (games) => gte(games.date, DateTime.now().startOf('day').toJSDate()),
