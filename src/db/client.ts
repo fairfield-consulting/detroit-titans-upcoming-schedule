@@ -5,6 +5,9 @@ import { env } from '@/env'
 
 import * as schema from './schema'
 
-const sql = createClient({ url: env.DATABASE_URL })
+const sql = createClient({
+  url: env.DATABASE_URL,
+  authToken: env.DATABASE_AUTH_TOKEN,
+})
 
 export const db = drizzle(sql, { schema })
