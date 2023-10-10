@@ -4,7 +4,7 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "prisma migrate deploy && prisma generate && remix build",
+    "build": "remix build",
     "dev": "concurrently --kill-others \"npm:*:dev\"",
     "remix:dev": "remix dev --manual",
     "inngest:dev": "npx inngest-cli@latest dev --no-discovery -u http://localhost:3000/api/inngest",
@@ -13,7 +13,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@prisma/client": "^5.4.0",
+    "@libsql/client": "^0.3.5",
     "@remix-run/css-bundle": "^2.0.1",
     "@remix-run/node": "^2.0.1",
     "@remix-run/react": "^2.0.1",
@@ -22,6 +22,8 @@
     "@vercel/analytics": "^1.1.0",
     "@vercel/remix": "^2.0.1",
     "autoprefixer": "10.4.16",
+    "drizzle-orm": "^0.28.6",
+    "drizzle-zod": "^0.5.1",
     "hast-util-from-html": "^2.0.1",
     "hast-util-select": "^6.0.1",
     "inngest": "^3.0.1",
@@ -41,13 +43,13 @@
     "@types/react-dom": "^18.2.7",
     "bun-types": "^1.0.3",
     "concurrently": "^8.2.1",
+    "drizzle-kit": "^0.19.13",
     "eslint": "^8.50.0",
     "eslint-plugin-no-relative-import-paths": "^1.5.2",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "postcss": "8.4.30",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
-    "prisma": "^5.4.0",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2"
   }

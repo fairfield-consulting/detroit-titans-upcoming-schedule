@@ -1,8 +1,9 @@
 import { useLoaderData } from '@remix-run/react'
 import { type MetaFunction } from '@vercel/remix'
+import { asc, gte } from 'drizzle-orm'
 import { DateTime } from 'luxon'
 
-import { prisma } from '~/db.server'
+import { db } from '~/drizzle/client'
 import { logger } from '~/logger.server'
 import { Sport } from '~/sport'
 
@@ -18,24 +19,9 @@ export const meta: MetaFunction = () => {
 
 export async function loader() {
   logger.profile('Load upcoming games')
-  const games = await prisma.game.findMany({
-    where: {
-      date: {
-        gte: DateTime.now().startOf('day').toJSDate(),
-      },
-    },
-    orderBy: {
-      date: 'asc',
-    },
-    select: {
-      id: true,
-      sportId: true,
-      gameId: true,
-      opponentName: true,
-      opponentLogoUrl: true,
-      date: true,
-      time: true,
-    },
+  const games = await db.query.games.findMany({
+    where: (games) => gte(games.date, DateTime.now().startOf('day').toJSDate()),
+    orderBy: (games) => [asc(games.date)],
   })
   logger.profile('Load upcoming games')
 

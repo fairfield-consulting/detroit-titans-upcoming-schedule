@@ -1,6 +1,8 @@
+import { sql } from 'drizzle-orm'
 import { DateTime } from 'luxon'
 
-import { prisma } from '~/db.server'
+import { db } from '~/drizzle/client'
+import * as schema from '~/drizzle/schema'
 import { logger } from '~/logger.server'
 import { inngest } from '~/routes/api.inngest/client'
 import { sportIdToSlug } from '~/sport'
@@ -30,24 +32,27 @@ export default inngest.createFunction(
       { id: 'upsert-home-games', name: 'Upserting games' },
       async () => {
         logger.profile('Upserting home games')
-        await prisma.$transaction([
-          ...homeGames.map((game) =>
-            prisma.game.upsert({
-              where: { gameId: game.gameId },
-              create: {
+        await db.transaction(async (tx) => {
+          await tx
+            .insert(schema.games)
+            .values(
+              homeGames.map((game) => ({
                 ...game,
-                date: DateTime.fromISO(game.date).toUTC().toJSDate(),
-              },
-              update: {
-                date: DateTime.fromISO(game.date).toUTC().toJSDate(),
-                time: game.time,
-                opponentName: game.opponentName,
-                opponentLogoUrl: game.opponentLogoUrl,
+                date: DateTime.fromISO(game.date).toJSDate(),
+              }))
+            )
+            .onConflictDoUpdate({
+              target: schema.games.gameId,
+              set: {
+                date: sql`excluded.date`,
+                time: sql`excluded.time`,
+                opponentName: sql`excluded.opponent_name`,
+                opponentId: sql`excluded.opponent_id`,
+                opponentLogoUrl: sql`excluded.opponent_logo_url`,
               },
             })
-          ),
-          prisma.gameUpdate.create({ data: { sportId } }),
-        ])
+          await tx.insert(schema.gameUpdates).values({ sportId })
+        })
         logger.profile('Upserting home games')
       }
     )
