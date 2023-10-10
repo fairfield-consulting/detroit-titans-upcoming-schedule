@@ -4,7 +4,6 @@ import { asc, gte } from 'drizzle-orm'
 import { DateTime } from 'luxon'
 
 import { db } from '~/drizzle/client'
-import { logger } from '~/logger.server'
 import { Sport } from '~/sport'
 
 export const config = {
@@ -22,12 +21,10 @@ export const meta: MetaFunction = () => {
 }
 
 export async function loader() {
-  logger.profile('Load upcoming games')
   const games = await db.query.games.findMany({
     where: (games) => gte(games.date, DateTime.now().startOf('day').toJSDate()),
     orderBy: (games) => [asc(games.date)],
   })
-  logger.profile('Load upcoming games')
 
   return {
     games: games.map((game) => ({
