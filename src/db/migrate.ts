@@ -1,9 +1,5 @@
-import { migrate } from 'drizzle-orm/node-postgres/migrator'
+import { migrate } from 'drizzle-orm/libsql/migrator'
 
 import { db } from './client'
 
-async function main() {
-  await migrate(db, { migrationsFolder: 'drizzle' })
-}
-
-main()
+migrate(db, { migrationsFolder: 'drizzle' })

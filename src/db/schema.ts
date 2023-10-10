@@ -1,27 +1,37 @@
+import { sql } from 'drizzle-orm'
 import {
-  date,
   integer,
-  pgTable,
-  serial,
+  sqliteTable,
   text,
-  timestamp,
   uniqueIndex,
-} from 'drizzle-orm/pg-core'
+} from 'drizzle-orm/sqlite-core'
 import { createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
-export const games = pgTable(
+const primaryKey = () => ({
+  id: integer('id').primaryKey(),
+})
+
+const timestamps = () => ({
+  createdAt: integer('created_at', { mode: 'timestamp' }).default(
+    sql`CURRENT_TIMESTAMP`
+  ),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).default(
+    sql`CURRENT_TIMESTAMP`
+  ),
+})
+
+export const games = sqliteTable(
   'games',
   {
-    id: serial('id').primaryKey(),
-    createdAt: timestamp('created_at').defaultNow(),
-    updatedAt: timestamp('updated_at').defaultNow(),
+    ...primaryKey(),
+    ...timestamps(),
     gameId: integer('game_id').notNull().unique(),
     sportId: integer('sport_id').notNull(),
     opponentId: integer('opponent_id').notNull(),
     opponentName: text('opponent_name').notNull(),
     opponentLogoUrl: text('opponent_logo_url'),
-    date: date('date', { mode: 'string' }).notNull(),
+    date: integer('date', { mode: 'timestamp' }).notNull(),
     time: text('time'),
   },
   (table) => ({
@@ -29,15 +39,11 @@ export const games = pgTable(
   })
 )
 
-export const SelectGamesSchema = createSelectSchema(games, {
-  date: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-})
+export const SelectGamesSchema = createSelectSchema(games)
+export type SelectGamesSchema = z.infer<typeof SelectGamesSchema>
 
-export const gameUpdates = pgTable('game_updates', {
-  id: serial('id').primaryKey(),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+export const gameUpdates = sqliteTable('game_updates', {
+  ...primaryKey(),
+  ...timestamps(),
   sportId: integer('sport_id').notNull(),
 })

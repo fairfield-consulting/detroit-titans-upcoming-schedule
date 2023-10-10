@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import Image from 'next/image'
 
+import type { SelectGamesSchema } from '@/db/schema'
 import { Sport } from '@/sport'
 
 function displaySportName(sportId: number) {
@@ -31,10 +32,8 @@ function sportEmoji(sportId: number) {
   }
 }
 
-type Game = Record<string, any>
-
-export function GameCard({ game }: { game: Game }) {
-  const gameDate = DateTime.fromISO(game.date!)
+export function GameCard({ game }: { game: SelectGamesSchema }) {
+  const gameDate = DateTime.fromJSDate(game.date)
   return (
     <li className='relative col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow'>
       <span className='absolute p-2 text-2xl'>{sportEmoji(game.sportId)}</span>

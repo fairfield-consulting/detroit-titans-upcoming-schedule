@@ -1,11 +1,17 @@
-import { fetchUpcomingGames } from '@/api'
+import { asc, gte } from 'drizzle-orm'
+import { DateTime } from 'luxon'
+
+import { db } from '@/db/client'
 
 import { GameCard } from './components/game-card'
 
-export const revalidate = 60 * 60 * 6 // 6 hours
+export const runtime = 'edge'
 
 export default async function Home() {
-  const { data: games } = await fetchUpcomingGames()
+  const games = await db.query.games.findMany({
+    where: (games) => gte(games.date, DateTime.now().startOf('day').toJSDate()),
+    orderBy: (games) => [asc(games.date)],
+  })
 
   return (
     <main className='container mx-auto flex min-h-screen flex-col space-y-8 px-4 py-24'>
