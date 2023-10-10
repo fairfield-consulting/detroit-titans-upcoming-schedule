@@ -1,5 +1,5 @@
 import { useLoaderData } from '@remix-run/react'
-import { type MetaFunction } from '@vercel/remix'
+import type { LoaderFunctionArgs, type MetaFunction } from '@vercel/remix'
 import { asc, gte } from 'drizzle-orm'
 import { DateTime } from 'luxon'
 
@@ -26,7 +26,11 @@ export function headers() {
   }
 }
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
+  if (request.method.toLowerCase() === 'options') {
+    return new Response(null, { status: 200 })
+  }
+
   const games = await db.query.games.findMany({
     where: (games) => gte(games.date, DateTime.now().startOf('day').toJSDate()),
     orderBy: (games) => [asc(games.date)],
