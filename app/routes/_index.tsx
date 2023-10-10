@@ -7,6 +7,10 @@ import { db } from '~/drizzle/client'
 import { logger } from '~/logger.server'
 import { Sport } from '~/sport'
 
+export const config = {
+  runtime: 'edge',
+}
+
 export const meta: MetaFunction = () => {
   return [
     { title: 'Detroit Titans Upcoming Home Games' },
