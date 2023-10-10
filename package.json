@@ -9,10 +9,11 @@
     "build": "bun db:migrate && next build",
     "start": "next start",
     "lint": "next lint",
-    "db:migrate": "bun run src/db/migrate.ts"
+    "db:migrate": "drizzle-kit check:sqlite || bun run src/db/migrate.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.3.5",
+    "better-sqlite3": "^8.7.0",
     "drizzle-orm": "^0.28.6",
     "drizzle-zod": "^0.5.1",
     "hast-util-from-html": "^2.0.1",
