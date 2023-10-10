@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    esmExternals: 'loose',
-  },
+  transpilePackages: ['@libsql/client', '@libsql/isomorphic-fetch'],
   images: {
     domains: ['detroittitans.com'],
   },
