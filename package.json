@@ -3,18 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@8.9.0",
   "scripts": {
     "dev": "concurrently --kill-others \"npm:*:dev\"",
     "next:dev": "next dev",
     "inngest:dev": "npx inngest-cli@latest dev --no-discovery -u http://localhost:3000/api/inngest",
-    "build": "bun db:migrate && next build",
+    "build": "pnpm db:migrate && next build",
     "start": "next start",
     "lint": "next lint",
-    "db:migrate": "drizzle-kit check:sqlite || bun run src/db/migrate.ts"
+    "test": "vitest",
+    "db:migrate": "drizzle-kit check:sqlite || dotenv -e .env.local -e .env tsx src/db/migrate.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.3.5",
     "better-sqlite3": "^8.7.0",
+    "dotenv-cli": "^7.3.0",
     "drizzle-orm": "^0.28.6",
     "drizzle-zod": "^0.5.1",
     "hast-util-from-html": "^2.0.1",
@@ -33,7 +36,6 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
-    "bun-types": "^1.0.5-canary.20231008T140131",
     "concurrently": "^8.2.1",
     "drizzle-kit": "^0.19.13",
     "encoding": "^0.1.13",
@@ -45,6 +47,9 @@
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.5",
     "tailwindcss": "^3",
-    "typescript": "^5"
+    "tsx": "^3.13.0",
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^4.2.1",
+    "vitest": "^0.34.6"
   }
 }

@@ -1,7 +1,5 @@
-/// <reference types="bun-types" />
-
-import { describe, expect, test } from 'bun:test'
 import { DateTime, Info } from 'luxon'
+import { describe, expect, test } from 'vitest'
 
 import { parseDateForYear } from './utils'
 
